@@ -17,12 +17,12 @@ source(file = "VIG_UI_functions.R")
 
 # UI ----------------------------------------------------------------------
 ui <- dashboardPage(
-    dashboardHeader(title = "Parameter Name Validator"),
+    dashboardHeader(title = "eData Import GUI"),
 
 ## Sidebar ----------------------------------------------------------------
     
     dashboardSidebar(
-        width = 300,
+        width = 200,
 ### Sidebar 1. General ----------------------------------------------------
         box(
             title = "1. General information",
@@ -151,7 +151,7 @@ ui <- dashboardPage(
         .box.box-darkgrey > .box-header { background-color: #616161 !important; color: #fff !important; }
             "))
         ),
-        
+   
 ### Dashboard 1. General ------------------------------------------------------
         box(
             title = "1.1 Introduction",
@@ -281,8 +281,8 @@ box(
     tabsetPanel(
         tabPanel("Manual Entry",
                  textInput("siteCode", "Site Code"),
-                 numericInput("xCoord", "X Coordinate (Longitude)", value = NULL),
-                 numericInput("yCoord", "Y Coordinate (Latitude)", value = NULL),
+                 numericInput("xCoord", "X Coordinate (Longitude)", value = NULL, width = "30%"),
+                 numericInput("yCoord", "Y Coordinate (Latitude)", value = NULL, width = "30%"),
                  selectInput("crs", "Coordinate Reference System",
                              choices = c(
                                  "WGS 84 (EPSG:4326)" = "EPSG:4326",
@@ -291,7 +291,7 @@ box(
                                  "Web Mercator (EPSG:3857)" = "EPSG:3857",
                                  "ETRS89 (EPSG:4258)" = "EPSG:4258",
                                  "EUREF89 - NTM Zone 10 (EPSG:5110)" = "EPSG:5110"
-                             )),
+                             ), width = "30%"),
                  div(
                      style = "margin-top: 15px",
                      actionButton("addSite", "Add Site", 
@@ -435,7 +435,10 @@ box(
             class = "box-green",
             solidHeader = TRUE,
             collapsible = TRUE, collapsed = TRUE,
-            textAreaInput("parameters", "Enter parameters:", rows = 5)
+            textAreaInput("parameters", "Enter parameter names (one per line):", rows = 10),
+            actionButton("validate", "Validate Parameters"),
+            uiOutput("progress"),
+            style = "primary"
         ),
 
 #### Dashboard 4.2 Validate Parameters ---------------------------------------
@@ -446,7 +449,13 @@ box(
             class = "box-green",
             solidHeader = TRUE,
             collapsible = TRUE, collapsed = TRUE,
-            DTOutput("parameter_validation")
+            DTOutput("results"),
+            div(style = "margin-top: 15px",
+                actionButton("addStressor", "Add as Stressor", class = "btn-primary"),
+                actionButton("addQuality", "Add as Quality parameter", class = "btn-info"),
+                actionButton("addNorm", "Add as Normalization", class = "btn-success"),
+                actionButton("addBackground", "Add as Background", class = "btn-warning")
+            )
         ),
 
 #### Dashboard 4.3 Parameters Details ---------------------------------------
@@ -457,7 +466,8 @@ box(
             class = "box-green",
             solidHeader = TRUE,
             collapsible = TRUE, collapsed = TRUE,
-            textAreaInput("parameter_details", "Enter parameter details:", rows = 5)
+            DTOutput("selected"),
+            actionButton("remove", "Remove selected parameters", class = "mt-3"),
         ),
 
 #### Dashboard 4.4 Export Parameters ---------------------------------------
@@ -867,9 +877,6 @@ server <- function(input, output, session) {
     })
        
 ### Functions 4. Parameters -----------------------------------------------------
-    observeEvent(input$validate, {
-        updateCollapse(session, "collapsePanels", open = "2. Parameter validation")
-    })
     showDuplicateModal <- function() {
         showModal(modalDialog(
             title = "Parameter Already Added",
