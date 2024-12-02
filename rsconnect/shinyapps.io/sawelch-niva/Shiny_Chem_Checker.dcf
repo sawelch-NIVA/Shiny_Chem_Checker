@@ -1,0 +1,12 @@
+name: Shiny_Chem_Checker
+title: Shiny_Chem_Checker
+username: sawelch-niva
+account: sawelch-niva
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13494236
+bundleId: 9446369
+url: https://sawelch-niva.shinyapps.io/Shiny_Chem_Checker/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
