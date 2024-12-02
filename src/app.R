@@ -27,9 +27,9 @@ ui <- dashboardPage(
         box(
             title = "1. General information",
             width = NULL,
-            status = "primary",
+            class = "box-grey",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             tags$div(class = "nav flex-column",
                      tags$a(href = "#general", "1.1 Introduction", class = "nav-link"),
                      tags$a(href = "#general", "1.2 Dataset general information", class = "nav-link")
@@ -42,14 +42,13 @@ ui <- dashboardPage(
         box(
             title = "2. Sites",
             width = NULL,
-            status = "danger",
+            class = "box-red",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             tags$div(class = "nav flex-column",
                      tags$a(href = "#site-coordinates", "2.1 Input site coordinates", class = "nav-link"),
-                     tags$a(href = "#validate-coordinates", "2.2 Validate site coordinates", class = "nav-link"),
-                     tags$a(href = "#site-features", "2.3 Enter site features", class = "nav-link"),
-                     tags$a(href = "#export-parameters", "2.4 Export sampled parameters", class = "nav-link")
+                     tags$a(href = "#site-features", "2.2 Enter site features", class = "nav-link"),
+                     tags$a(href = "#export-parameters", "2.3 Export sampled parameters", class = "nav-link")
             )
         ),
         
@@ -57,9 +56,9 @@ ui <- dashboardPage(
         box(
             title = "3. Compartments",
             width = NULL,
-            status = "primary",
+            class = "box-yellow",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             tags$div(class = "nav flex-column",
                      tags$a(href = "#compartments", "3.1 Compartments", class = "nav-link"),
                      tags$a(href = "#input-compartments", "3.2 Input sampled compartments", class = "nav-link"),
@@ -71,9 +70,9 @@ ui <- dashboardPage(
         box(
             title = "4. Parameters",
             width = NULL,
-            status = "success",
+            class = "box-green",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             tags$div(class = "nav flex-column",
                      tags$a(href = "#input-parameters", "4.1 Input sampled parameters", class = "nav-link"),
                      tags$a(href = "#validate-parameters", "4.2 Validate sampled parameters", class = "nav-link"),
@@ -86,9 +85,9 @@ ui <- dashboardPage(
         box(
             title = "5. Samples",
             width = NULL,
-            status = "warning",
+            class = "box-blue",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             tags$div(class = "nav flex-column",
                      tags$a(href = "#input-combinations", "5.1 Input sample combinations", class = "nav-link"),
                      tags$a(href = "#validate-combinations", "5.2 Validate sample combinations", class = "nav-link"),
@@ -101,9 +100,9 @@ ui <- dashboardPage(
         box(
             title = "6. Measurements",
             width = NULL,
-            status = "warning", # Using warning as closest to orange
+            class = "box-purple",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             tags$div(class = "nav flex-column",
                      tags$a(href = "#export-template", "6.1 Export Excel template", class = "nav-link"),
                      tags$a(href = "#fill-template", "6.2 Fill in Excel template", class = "nav-link"),
@@ -113,7 +112,7 @@ ui <- dashboardPage(
         )
     ),
 
-## Dashboard Body ----------------------------------------------------------
+## Dashboard ----------------------------------------------------------
     dashboardBody(
         useShinyjs(),
         tags$head(
@@ -140,6 +139,16 @@ ui <- dashboardPage(
                 .shiny-notification-panel {
                     z-index: 99999;
                 }
+                
+        /* Google-inspired rainbow palette */
+        .box.box-red > .box-header { background-color: #db4437 !important; color: #fff !important; }
+        .box.box-orange > .box-header { background-color: #f4b400 !important; color: #fff !important; }
+        .box.box-yellow > .box-header { background-color: #f4b400 !important; color: #000 !important; }
+        .box.box-green > .box-header { background-color: #0f9d58 !important; color: #fff !important; }
+        .box.box-blue > .box-header { background-color: #4285f4 !important; color: #fff !important; }
+        .box.box-purple > .box-header { background-color: #7b1fa2 !important; color: #fff !important; }
+        .box.box-grey > .box-header { background-color: #9e9e9e !important; color: #fff !important; }
+        .box.box-darkgrey > .box-header { background-color: #616161 !important; color: #fff !important; }
             "))
         ),
         
@@ -147,9 +156,9 @@ ui <- dashboardPage(
         box(
             title = "1.1 Introduction",
             width = NULL,
-            status = "primary",
+            class = "box-grey",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             
             div(
                 class = "markdown-content",
@@ -160,9 +169,9 @@ ui <- dashboardPage(
         box(
             title = "1.2 Enter general information",
             width = NULL,
-            status = "primary",
+            class = "box-grey",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             
             # Dataset ID section
             radioButtons("createID",
@@ -261,13 +270,14 @@ ui <- dashboardPage(
         ),
         
 ### Dashboard 2. Sites ------------------------------------------------------
+#### Dashboard 2.1 Site Coords ----------------------------------------------
 box(
     title = "2.1 Input site coordinates",
     width = NULL,
-    status = "danger",
+    class = "box-red",
     solidHeader = TRUE,
     collapsible = TRUE,
-    
+    collapsed = TRUE,
     tabsetPanel(
         tabPanel("Manual Entry",
                  textInput("siteCode", "Site Code"),
@@ -308,171 +318,229 @@ box(
             # Action buttons
             div(
                 style = "margin-top: 15px",
-                actionButton("validateAll", "Validate All Sites", class = "btn-success"),
+                actionButton("validateAll", "Next", class = "btn-success"),
                 actionButton("clearSites", "Clear All", class = "btn-danger")
             )
         ),
+#### Dashboard 2.2 Site Features ----------------------------------------------
         
-        box(
-            title = "2.2 Validate site coordinates",
-            width = NULL,
-            status = "danger",
-            solidHeader = TRUE,
-            collapsible = TRUE,
-            DTOutput("site_validation")
+box(
+    title = "2.2 Enter site features",
+    width = NULL,
+    class = "box-red",
+    solidHeader = TRUE,
+    collapsible = TRUE,
+    collapsed = TRUE,
+    # Site table with edit capabilities
+    DTOutput("editableSitesTable"),
+    
+    # Feature selection controls
+    div(
+        style = "margin-top: 15px",
+        selectInput("site_feature", "Geographic Feature",
+                    choices = c(
+                        "Select Feature" = "",
+                        "Lake" = "LAKE",
+                        "River" = "RIVER",
+                        "Coast" = "COAST",
+                        "Other" = "OTHER"
+                    )),
+        conditionalPanel(
+            condition = "input.site_feature == 'OTHER'",
+            textInput("custom_feature", "Specify Other Feature")
         ),
-        
+        selectInput("site_sub_feature", "Geographic Sub-Feature",
+                    choices = c(
+                        "Select Sub-Feature" = "",
+                        "Pelagic" = "PELAGIC",
+                        "Littoral" = "LITTORAL",
+                        "Profundal" = "PROFUNDAL",
+                        "Other" = "OTHER"
+                    )),
+        conditionalPanel(
+            condition = "input.site_sub_feature == 'OTHER'",
+            textInput("custom_sub_feature", "Specify Other Sub-Feature")
+        )
+    ),
+    
+    # Action buttons
+    div(
+        style = "margin-top: 15px",
+        actionButton("updateFeatures", "Update Selected Sites", 
+                     class = "btn-success",
+                     icon = icon("check")),
+        actionButton("duplicateSite", "Duplicate Selected", 
+                     class = "btn-info",
+                     icon = icon("copy")),
+        actionButton("updateSiteName", "Edit Site Name", 
+                     class = "btn-success",
+                     icon = icon("edit"))
+    )
+),
+#### Dashboard 2.3 Export Site ----------------------------------------------
         box(
-            title = "2.3 Enter site features",
+            title = "2.3 Export site parameters",
             width = NULL,
-            status = "danger",
+            class = "box-red",
             solidHeader = TRUE,
-            collapsible = TRUE,
-            textAreaInput("site_features", "Enter site features:", rows = 5)
+            collapsible = TRUE, collapsed = TRUE,
+            downloadButton("export_sites", "Download Sites as .csv"),
+            actionButton("go_to_compartments", "Next", 
+                         class = "btn-warning",
+                         icon = icon("edit"))
         ),
-        
-        box(
-            title = "2.4 Export sampled parameters",
-            width = NULL,
-            status = "danger",
-            solidHeader = TRUE,
-            collapsible = TRUE,
-            downloadButton("export_sites", "Export Sites Data")
-        ),
-        
-        # Compartments panels
+### Dashboard 3 Compartments ----------------------------------------------
+
+#### Dashboard 3.1 Compartments ----------------------------------------------
+
         box(
             title = "3.1 Compartments",
             width = NULL,
-            status = "primary",
+            class = "box-yellow",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             textAreaInput("compartments", "Enter compartments:", rows = 5)
         ),
-        
+
+#### Dashboard 3.2 Sampled Compartments ----------------------------------------
+
         box(
             title = "3.2 Input sampled compartments",
             width = NULL,
-            status = "primary",
+            class = "box-yellow",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             textAreaInput("sampled_compartments", "Enter sampled compartments:", rows = 5)
         ),
+
+#### Dashboard 3.3 Validate Compartments ---------------------------------------
         
         box(
             title = "3.3 Validate sampled compartments",
             width = NULL,
-            status = "primary",
+            class = "box-yellow",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             DTOutput("compartment_validation")
         ),
-        
+
+### Dashboard 4 Parameters ----------------------------------------------
+
+#### Dashboard 4.1 Input Parameters ---------------------------------------
+
         # Parameters panels
         box(
             title = "4.1 Input sampled parameters",
             width = NULL,
-            status = "success",
+            class = "box-green",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             textAreaInput("parameters", "Enter parameters:", rows = 5)
         ),
-        
+
+#### Dashboard 4.2 Validate Parameters ---------------------------------------
+
         box(
             title = "4.2 Validate sampled parameters",
             width = NULL,
-            status = "success",
+            class = "box-green",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             DTOutput("parameter_validation")
         ),
-        
+
+#### Dashboard 4.3 Parameters Details ---------------------------------------
+
         box(
             title = "4.3 Enter parameter details",
             width = NULL,
-            status = "success",
+            class = "box-green",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             textAreaInput("parameter_details", "Enter parameter details:", rows = 5)
         ),
+
+#### Dashboard 4.4 Export Parameters ---------------------------------------
         
         box(
             title = "4.4 Export sampled parameters",
             width = NULL,
-            status = "success",
+            class = "box-green",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             downloadButton("export_parameters", "Export Parameters")
         ),
-        
+
+### Dashboard 5 Samples ----------------------------------------------
+
         # Samples panels
         box(
             title = "5.1 Input sample combinations",
             width = NULL,
-            status = "warning",
+            class = "box-blue",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             textAreaInput("sample_combinations", "Enter sample combinations:", rows = 5)
         ),
         
         box(
             title = "5.2 Validate sample combinations",
             width = NULL,
-            status = "warning",
+            class = "box-blue",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             DTOutput("sample_validation")
         ),
         
         box(
             title = "5.3 Export sample combinations",
             width = NULL,
-            status = "warning",
+            class = "box-blue",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             downloadButton("export_samples", "Export Samples")
         ),
-        
+### Dashboard 6 Measurements ----------------------------------------------
+
         # Measurements panels
         box(
             title = "6.1 Export Excel template",
             width = NULL,
-            status = "warning",
+            class = "box-purple",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             downloadButton("export_template", "Export Template")
         ),
         
         box(
             title = "6.2 Fill in Excel template",
             width = NULL,
-            status = "warning",
+            class = "box-purple",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             helpText("Please fill in the exported Excel template with your data.")
         ),
         
         box(
             title = "6.3 Upload Excel template",
             width = NULL,
-            status = "warning",
+            class = "box-purple",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             fileInput("template_upload", "Upload filled template")
         ),
         
         box(
             title = "6.4 Submit to RaDB",
             width = NULL,
-            status = "warning",
+            class = "box-purple",
             solidHeader = TRUE,
-            collapsible = TRUE,
+            collapsible = TRUE, collapsed = TRUE,
             actionButton("submit_radb", "Submit to RaDB", class = "btn-primary")
         )
     )
 )
 
-# Server function remains unchanged
 
 # SERVER() ----------------------------------------------------------------
 
@@ -495,66 +563,60 @@ server <- function(input, output, session) {
             duration = 2
         )
     }
-    ### Functions 1. General ------------------------------------------------
+### Functions 1. General ------------------------------------------------
     
-    ### Functions 2. Sites -----------------------------------------------------
-    
+### Functions 2. Sites -----------------------------------------------------
+
+
+#### sites_df ----------------------------------------------------------------
     sites <- reactiveVal(data.frame(
+        site_id = integer(),
         siteCode = character(),
         x = numeric(),
         y = numeric(),
         crs = character(),
+        feature = character(),
+        sub_feature = character(),
         stringsAsFactors = FALSE
     ))
     
-    # Add site handler
+#### site_counter -------------------------------------------------------------  
+    site_counter <- reactiveVal(1)
+    
+#### site_handler -------------------------------------------------------------  
     observeEvent(input$addSite, {
-        debug_notify("addSite")  # Debug notification
+        debug_notify("addSite")
         req(input$siteCode, input$xCoord, input$yCoord, input$crs)
         
-        # Validate coordinates based on CRS
-        valid <- TRUE
-        tryCatch({
-            epsg_code <- as.numeric(sub(".*:(\\d+)$", "\\1", input$crs))
-            point <- st_point(c(input$xCoord, input$yCoord))
-            point_sf <- st_sfc(point, crs = epsg_code)
-            point_wgs84 <- st_transform(point_sf, 4326)
-            
-            coords <- st_coordinates(point_wgs84)
-            
-            if (coords[1] < -180 || coords[1] > 180 || coords[2] < -90 || coords[2] > 90) {
-                valid <- FALSE
-                notify("Transformed coordinates are outside valid bounds", type = "error")
-            }
-        }, error = function(e) {
-            valid <- FALSE
-            notify("Invalid coordinates for selected CRS", type = "error")
-        })
-        
-        if (!valid) return()
+        current_sites <- sites()
+        new_site_id <- if(nrow(current_sites) == 0) 1 else max(current_sites$site_id) + 1
         
         new_site <- data.frame(
+            site_id = new_site_id,
             siteCode = input$siteCode,
             x = input$xCoord,
             y = input$yCoord,
             crs = input$crs,
+            feature = NA_character_,
+            sub_feature = NA_character_,
             stringsAsFactors = FALSE
         )
         
-        # Add to existing sites
-        current_sites <- sites()
-        sites(rbind(current_sites, new_site))
+        validated_site <- validateCoordinatesWithNotification(new_site)
         
-        # Clear input fields
-        updateTextInput(session, "siteCode", value = "")
-        updateNumericInput(session, "xCoord", value = NULL)
-        updateNumericInput(session, "yCoord", value = NULL)
-        
-        notify("Site added successfully", type = "message")
+        if (!is.null(validated_site)) {
+            sites(rbind(current_sites, validated_site))
+            notify("Site added successfully", type = "message")
+            
+            updateTextInput(session, "siteCode", value = "")
+            updateNumericInput(session, "xCoord", value = NULL)
+            updateNumericInput(session, "yCoord", value = NULL)
+        }
     })
     
+#### removeSites -------------------------------------------------------------  
     observeEvent(input$removeSites, {
-        debug_notify("removeSites")  # Debug notification
+        debug_notify("removeSites")
         req(input$sitesTable_rows_selected)
         
         current_sites <- sites()
@@ -563,11 +625,12 @@ server <- function(input, output, session) {
             notify("Selected sites have been removed", type = "warning")
         }
     })
-    
-    # Render sites table
+
+#### sitesTable -------------------------------------------------------------  
     output$sitesTable <- renderDT({
+        selected_cols <- c("siteCode", "x", "y", "crs")
         datatable(
-            sites(),
+            sites()[, selected_cols, drop = FALSE],
             options = list(
                 pageLength = 5,
                 dom = 'lftip'
@@ -582,7 +645,32 @@ server <- function(input, output, session) {
             )
         )
     })
+
+#### editableSitesTable -------------------------------------------------------------  
+    output$editableSitesTable <- renderDT({
+        debug_notify("renderEditableSitesTable")
+        datatable(
+            sites(),
+            options = list(
+                pageLength = 5,
+                dom = 'lftip'
+            ),
+            selection = 'multiple',
+            rownames = FALSE,
+            colnames = c(
+                "ID" = "site_id",
+                "Site Code" = "siteCode",
+                "X" = "x",
+                "Y" = "y",
+                "CRS" = "crs",
+                "Feature" = "feature",
+                "Sub-Feature" = "sub_feature"
+            ),
+            editable = TRUE
+        )
+    })
     
+#### siteMap -------------------------------------------------------------  
     # Initialize map
     output$siteMap <- renderLeaflet({
         leaflet() %>%
@@ -592,7 +680,7 @@ server <- function(input, output, session) {
     
     # Update map when sites change
     observe({
-        debug_notify("mapUpdate")  # Debug notification
+        debug_notify("mapUpdate")
         req(sites())
         if (nrow(sites()) > 0) {
             # Convert all sites to WGS84 for mapping
@@ -626,6 +714,158 @@ server <- function(input, output, session) {
         }
     })
     
+#### updateSiteName -------------------------------------------------------------  
+    # Handle site name editing
+    observeEvent(input$updateSiteName, {
+        debug_notify("updateSiteName")
+        req(input$editableSitesTable_rows_selected)
+        
+        showModal(modalDialog(
+            title = "Edit Site Name",
+            textInput("newSiteName", "New Site Name"),
+            footer = tagList(
+                modalButton("Cancel"),
+                actionButton("saveSiteName", "Save", class = "btn-success")
+            )
+        ))
+    })
+    
+#### saveSiteName -------------------------------------------------------------  
+    observeEvent(input$saveSiteName, {
+        debug_notify("saveSiteName")
+        req(input$newSiteName, input$editableSitesTable_rows_selected)
+        
+        current_sites <- sites()
+        current_sites$siteCode[input$editableSitesTable_rows_selected] <- input$newSiteName
+        sites(current_sites)
+        
+        removeModal()
+        notify("Site name updated", type = "message")
+    })
+    
+#### updateFeatures -------------------------------------------------------------  
+    observeEvent(input$updateFeatures, {
+        debug_notify("updateFeatures")
+        req(input$editableSitesTable_rows_selected)
+        
+        feature <- if(input$site_feature == "OTHER") input$custom_feature else input$site_feature
+        sub_feature <- if(input$site_sub_feature == "OTHER") input$custom_sub_feature else input$site_sub_feature
+        
+        current_sites <- sites()
+        current_sites$feature[input$editableSitesTable_rows_selected] <- feature
+        current_sites$sub_feature[input$editableSitesTable_rows_selected] <- sub_feature
+        sites(current_sites)
+        
+        notify("Features updated for selected sites", type = "message")
+    })
+    
+
+#### duplicateSite -----------------------------------------------------------
+    observeEvent(input$duplicateSite, {
+        debug_notify("duplicateSite")
+        req(input$editableSitesTable_rows_selected)
+        
+        current_sites <- sites()
+        sites_to_duplicate <- current_sites[input$editableSitesTable_rows_selected, ]
+        
+        # Update the site counter to be greater than any existing ID
+        current_max_id <- max(current_sites$site_id, na.rm = TRUE)
+        new_start_id <- current_max_id + 1
+        
+        # Create sequential IDs for new duplicates
+        sites_to_duplicate$site_id <- seq(
+            from = new_start_id,
+            length.out = nrow(sites_to_duplicate)
+        )
+        
+        # Update the site codes
+        sites_to_duplicate$siteCode <- paste0(sites_to_duplicate$siteCode, "_copy")
+        
+        # Combine original and duplicated sites
+        sites(rbind(current_sites, sites_to_duplicate))
+        
+        # Update the counter for future additions
+        site_counter(max(sites()$site_id) + 1)
+        
+        notify("Sites duplicated successfully", type = "message")
+    })
+
+#### Validate coordinates ------------------------------------------------
+    validateCoordinatesWithNotification <- function(site_data) {
+        debug_notify("validateCoordinatesWithNotification")
+        
+        # Check only essential fields
+        essential_fields <- c("siteCode", "x", "y", "crs")
+        if(any(is.na(site_data[essential_fields]))) {
+            notify("Error: Missing values in essential site data (code, coordinates, or CRS)", type = "error")
+            return(NULL)
+        }
+        
+        # Convert to sf object for spatial validation
+        sites_sf <- try({
+            epsg_code <- as.numeric(sub(".*:(\\d+)$", "\\1", site_data$crs))
+            point <- st_point(c(site_data$x, site_data$y))
+            point_sf <- st_sfc(point, crs = epsg_code)
+            point_wgs84 <- st_transform(point_sf, 4326)
+            
+            # Check if coordinates are within reasonable bounds after transformation
+            coords <- st_coordinates(point_wgs84)
+            if (coords[1] < -180 || coords[1] > 180 || coords[2] < -90 || coords[2] > 90) {
+                notify("Warning: Coordinates are outside normal global bounds", type = "warning")
+            }
+            
+            # For Norway, we might want to check if points are roughly in the right area
+            # Rough bounds for Norway
+            if (coords[1] < 4 || coords[1] > 32 || coords[2] < 58 || coords[2] > 72) {
+                notify("Warning: Coordinates are outside Norway's typical bounds", type = "warning")
+            }
+        })
+        
+        if(inherits(sites_sf, "try-error")) {
+            notify("Error: Invalid coordinates or CRS", type = "error")
+            return(NULL)
+        }
+        
+        notify("Coordinates validated successfully", type = "message")
+        return(site_data)
+    }
+    
+#### export_sites ------------------------------------------------
+    output$export_sites <- downloadHandler(
+        filename = function() {
+            paste("sites-", Sys.Date(), ".csv", sep="")
+        },
+        content = function(file) {
+            debug_notify("exportSites")
+            write.csv(sites(), file, row.names = FALSE)
+        }
+    )
+
+#### go_to_compartments ------------------------------------------------ 
+ 
+    observeEvent(input$go_to_compartments, {
+        debug_notify("goToCompartments")
+        
+        # Validate that we have at least one site
+        if(nrow(sites()) == 0) {
+            notify("Please add at least one site before proceeding", type = "error")
+            return()
+        }
+        
+        # Collapse current box and open next one
+        runjs("
+        // Close the sites box
+        $('.box-red .box-header').click();
+        
+        // Open the compartments box after a short delay
+        setTimeout(function() {
+            $('.box-green .box-header').click();
+        }, 500);
+    ")
+        
+        notify("Moving to compartments section", type = "message")
+    })
+       
 ### Functions 4. Parameters -----------------------------------------------------
     observeEvent(input$validate, {
         updateCollapse(session, "collapsePanels", open = "2. Parameter validation")
@@ -800,6 +1040,5 @@ server <- function(input, output, session) {
                         ))
     })
 }    
-
 
 shinyApp(ui = ui, server = server)
